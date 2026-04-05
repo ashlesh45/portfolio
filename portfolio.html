@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>M Ashlesh Mallya — Data Analyst Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#06090a;--surface:#0d1214;--surface2:#141a1d;--surface3:#1b2226;
+  --green:#00ffaa;--green2:#00cc88;--glow:rgba(0,255,170,.10);
+  --blue:#38bdf8;--amber:#fbbf24;--red:#f87171;
+  --text:#dceee8;--muted:#607870;--faint:#1e2a26;
+  --border:rgba(0,255,170,.09);--border2:rgba(255,255,255,.05);
+  --mono:'JetBrains Mono',monospace;
+  --head:'Syne',sans-serif;
+  --body:'DM Sans',sans-serif;
+  --nav:56px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none}
+a{text-decoration:none;color:inherit;cursor:none}
+button{cursor:none;font-family:inherit}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green2);border-radius:2px}
+
+/* ── CURSOR ── */
+#cur{position:fixed;width:8px;height:8px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:screen}
+#cur-ring{position:fixed;width:30px;height:30px;border:1px solid rgba(0,255,170,.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .18s,height .18s;mix-blend-mode:screen}
+.hov #cur-ring{width:46px;height:46px}
+
+/* ── CANVAS ── */
+#cv{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;height:var(--nav);background:rgba(6,9,10,.88);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 48px}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--green);letter-spacing:.08em;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pdot 2.2s infinite}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.4}}
+.nav-links{display:flex;gap:24px}
+.nav-links a{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding-bottom:2px;border-bottom:1px solid transparent;transition:color .2s,border-color .2s}
+.nav-links a:hover,.nav-links a.on{color:var(--green);border-color:var(--green)}
+.nav-gh{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--bg);background:var(--green);padding:7px 18px;letter-spacing:.08em;text-transform:uppercase;transition:opacity .2s}
+.nav-gh:hover{opacity:.85}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px}
+.ham span{width:20px;height:1.5px;background:var(--green);display:block;transition:.3s}
+
+/* ── MOBILE DRAWER ── */
+.drawer{display:none;position:fixed;top:var(--nav);left:0;right:0;bottom:0;background:var(--bg);z-index:400;flex-direction:column;padding:40px 32px;gap:24px;border-top:1px solid var(--border)}
+.drawer.open{display:flex}
+.drawer a{font-family:var(--mono);font-size:16px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding-bottom:20px;border-bottom:1px solid var(--border2);transition:color .2s}
+.drawer a:hover{color:var(--green)}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;min-height:100vh;padding-top:var(--nav);position:relative;z-index:10}
+.page.on{display:block;animation:fadein .42s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ── SHARED ── */
+.wrap{max-width:1280px;margin:0 auto;padding:0 48px}
+.sw{padding:80px 0}
+.tag{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.15em;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.tag::before{content:'';width:28px;height:1px;background:var(--green)}
+.stitle{font-family:var(--head);font-size:clamp(32px,5vw,56px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin-bottom:52px}
+.divider{height:1px;background:var(--border2)}
+
+/* ── HOME ── */
+.hero{min-height:calc(100vh - var(--nav));display:flex;align-items:center;padding:60px 48px 80px;max-width:1280px;margin:0 auto;gap:56px}
+.hl{flex:1;min-width:0}
+.hr{flex:0 0 430px}
+.eyebrow{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.eyebrow::before{content:'';width:36px;height:1px;background:var(--green)}
+.hname{font-family:var(--head);font-size:clamp(50px,7.5vw,92px);font-weight:800;line-height:.95;letter-spacing:-.04em;margin-bottom:10px}
+.hname em{color:var(--green);font-style:normal}
+.hrole{font-family:var(--mono);font-size:14px;color:var(--muted);letter-spacing:.06em;margin-bottom:26px}
+.hrole b{color:var(--amber);font-weight:400}
+.hdesc{font-size:16px;color:var(--muted);line-height:1.75;max-width:500px;margin-bottom:40px}
+.brow{display:flex;gap:14px;flex-wrap:wrap}
+.bp{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--bg);background:var(--green);padding:13px 28px;letter-spacing:.08em;text-transform:uppercase;transition:opacity .2s,transform .15s;display:inline-flex;align-items:center;gap:8px}
+.bp:hover{opacity:.85;transform:translateY(-2px)}
+.bo{font-family:var(--mono);font-size:11px;color:var(--green);border:1px solid rgba(0,255,170,.3);padding:13px 28px;letter-spacing:.08em;text-transform:uppercase;background:transparent;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:8px}
+.bo:hover{background:var(--glow);transform:translateY(-2px)}
+
+/* ── TERMINAL ── */
+.term{background:var(--surface);border:1px solid var(--border);box-shadow:0 0 0 1px rgba(0,255,170,.03),0 32px 64px rgba(0,0,0,.5)}
+.tbar{background:var(--surface2);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border2);user-select:none}
+.tdots{display:flex;gap:6px}
+.tdots span{width:11px;height:11px;border-radius:50%}
+.tdots .d1{background:#ff5f57}.tdots .d2{background:#febc2e}.tdots .d3{background:#28c840}
+.ttitle{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em}
+.tbody{padding:18px 22px 10px;font-family:var(--mono);font-size:12.5px;line-height:1.65;height:370px;overflow-y:auto;scroll-behavior:smooth}
+.tbody::-webkit-scrollbar{width:2px}
+.tbody::-webkit-scrollbar-thumb{background:var(--faint)}
+.tl{display:flex;gap:8px;margin-bottom:2px;flex-wrap:wrap}
+.tp{color:var(--green);flex-shrink:0}
+.tp2{color:var(--muted);flex-shrink:0}
+.tc{color:var(--text);word-break:break-all}
+.to{color:var(--muted);padding:0 0 8px 0;margin-top:2px}
+.to .k{color:var(--blue)}.to .v{color:var(--amber)}.to .g{color:var(--green)}.to .r{color:var(--red)}.to .d{color:var(--muted)}
+.te{color:var(--red);padding:2px 0 8px}
+.tinrow{display:flex;align-items:center;gap:8px;padding:8px 22px 14px;border-top:1px solid var(--border2)}
+.tps{font-family:var(--mono);font-size:12.5px;color:var(--green);white-space:nowrap}
+.tinput{flex:1;background:transparent;border:none;outline:none;font-family:var(--mono);font-size:12.5px;color:var(--text);caret-color:var(--green);cursor:text}
+
+/* ── PROJECTS ── */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border2)}
+.pcard{background:var(--bg);padding:30px;display:flex;flex-direction:column;gap:11px;transition:background .22s;position:relative;overflow:hidden}
+.pcard::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));transform:scaleX(0);transform-origin:left;transition:transform .3s ease}
+.pcard:hover::after{transform:scaleX(1)}
+.pcard:hover{background:var(--surface2)}
+.pnum{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em}
+.plang{font-family:var(--mono);font-size:9px;color:var(--bg);background:var(--green);padding:2px 8px;width:fit-content;letter-spacing:.06em}
+.lpy{background:#3b82f6;color:#fff}.ljs{background:#eab308;color:#000}.lcs{background:#a855f7;color:#fff}
+.ljv{background:#f97316;color:#fff}.lht{background:#ef4444;color:#fff}.lcc{background:#64748b;color:#fff}
+.lnb{background:#10b981;color:#000}
+.ptitle{font-family:var(--head);font-size:17px;font-weight:700;line-height:1.2}
+.pdesc{font-size:13px;color:var(--muted);line-height:1.65;flex:1}
+.pmeta{display:flex;justify-content:space-between;align-items:center;margin-top:4px}
+.pstar{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.plink{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid rgba(0,255,170,.3);transition:border-color .2s}
+.plink:hover{border-color:var(--green)}
+.loading{text-align:center;padding:80px 0;font-family:var(--mono);font-size:13px;color:var(--muted)}
+.spin{display:inline-block;animation:spin 1s linear infinite;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EXPERIENCE ── */
+.ecard{display:grid;grid-template-columns:240px 1fr;gap:48px;background:var(--surface);border:1px solid var(--border2);padding:36px;margin-bottom:1px;transition:background .2s}
+.ecard:hover{background:var(--surface2)}
+.eperiod{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.1em;margin-bottom:10px;display:block}
+.eco{font-family:var(--head);font-size:22px;font-weight:700;margin-bottom:5px}
+.erole{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.07em;text-transform:uppercase}
+.elist{list-style:none;margin-top:4px}
+.elist li{font-size:14px;color:var(--muted);line-height:1.65;padding:8px 0;border-bottom:1px solid var(--border2);display:flex;gap:12px}
+.elist li:last-child{border:none}
+.elist li::before{content:'▸';color:var(--green);flex-shrink:0;font-size:11px;margin-top:3px}
+
+/* ── SKILLS ── */
+.skgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border2)}
+.skg{background:var(--bg);padding:36px}
+.sgt{font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:.14em;text-transform:uppercase;margin-bottom:22px;padding-bottom:10px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:8px}
+.sgt::before{content:'//';color:var(--faint)}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-family:var(--mono);font-size:11px;color:var(--text);background:var(--surface2);border:1px solid var(--border2);padding:6px 14px;letter-spacing:.04em;transition:border-color .2s,color .2s,background .2s}
+.pill:hover{border-color:var(--green);color:var(--green);background:var(--glow)}
+
+/* ── EDUCATION ── */
+.edugrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border2);margin-bottom:1px}
+.educard{background:var(--bg);padding:40px;display:flex;flex-direction:column;gap:14px}
+.edubadge{font-family:var(--mono);font-size:9px;color:var(--green);background:var(--glow);border:1px solid rgba(0,255,170,.2);padding:4px 12px;letter-spacing:.12em;text-transform:uppercase;width:fit-content}
+.eduinst{font-family:var(--head);font-size:22px;font-weight:700;line-height:1.2}
+.edudeg{font-size:14px;color:var(--muted);line-height:1.55}
+.eduhl{font-family:var(--mono);font-size:12px;color:var(--amber)}
+.edunote{font-size:13px;color:var(--faint);line-height:1.6}
+.certgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-top:48px}
+.certcard{background:var(--surface);border:1px solid var(--border2);padding:22px;display:flex;gap:14px;align-items:flex-start;transition:border-color .2s,transform .2s}
+.certcard:hover{border-color:rgba(0,255,170,.28);transform:translateY(-3px)}
+.certicon{width:38px;height:38px;flex-shrink:0;background:var(--glow);border:1px solid rgba(0,255,170,.2);display:flex;align-items:center;justify-content:center;font-size:17px}
+.cname{font-size:13.5px;font-weight:600;margin-bottom:4px;line-height:1.3}
+.ciss{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+
+/* ── CONTACT ── */
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.citem{display:flex;gap:16px;align-items:center;padding:20px;background:var(--surface);border:1px solid var(--border2);margin-bottom:12px;transition:border-color .2s,background .2s}
+.citem:hover{border-color:rgba(0,255,170,.3);background:var(--surface2)}
+.cico{width:40px;height:40px;flex-shrink:0;background:var(--glow);display:flex;align-items:center;justify-content:center;font-size:17px}
+.clbl{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.cval{font-size:14px;font-weight:500}
+.ccta{background:var(--surface);border:1px solid var(--border2);padding:44px;display:flex;flex-direction:column;gap:20px}
+.ctatitle{font-family:var(--head);font-size:32px;font-weight:800;line-height:1.1}
+.ctadesc{font-size:15px;color:var(--muted);line-height:1.7}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border2);padding:24px 48px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:10;flex-wrap:wrap;gap:12px}
+.flogo{font-family:var(--mono);font-size:11px;color:var(--green);letter-spacing:.07em}
+.fcopy{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.07em}
+.flinks{display:flex;gap:18px}
+.flinks a{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.09em;text-transform:uppercase;transition:color .2s}
+.flinks a:hover{color:var(--green)}
+
+/* ── REVEAL ── */
+.rv{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+.rv.vis{opacity:1;transform:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero{flex-direction:column;padding:60px 32px 60px}
+  .hr{flex:none;width:100%}
+  .ecard{grid-template-columns:1fr;gap:20px}
+  .skgrid,.edugrid,.cgrid{grid-template-columns:1fr}
+  .cgrid{gap:28px}
+}
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links,.nav-gh{display:none}
+  .ham{display:flex}
+  .hero,.wrap{padding-left:20px;padding-right:20px}
+  .sw{padding:60px 0}
+  footer{padding:20px;flex-direction:column;text-align:center}
+  .flinks{justify-content:center;flex-wrap:wrap}
+  body{cursor:auto}
+  #cur,#cur-ring{display:none}
+  .pgrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<canvas id="cv"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><div class="logo-dot"></div>ASHLESH_MALLYA</div>
+  <div class="nav-links">
+    <a href="#home"       class="na" data-p="home">Home</a>
+    <a href="#projects"   class="na" data-p="projects">Projects</a>
+    <a href="#experience" class="na" data-p="experience">Experience</a>
+    <a href="#skills"     class="na" data-p="skills">Skills</a>
+    <a href="#education"  class="na" data-p="education">Education</a>
+    <a href="#contact"    class="na" data-p="contact">Contact</a>
+  </div>
+  <a href="https://github.com/ashlesh45" target="_blank" class="nav-gh">GitHub ↗</a>
+  <button class="ham" id="ham"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="drawer" id="drawer">
+  <a href="#home"       onclick="go('home')">Home</a>
+  <a href="#projects"   onclick="go('projects')">Projects</a>
+  <a href="#experience" onclick="go('experience')">Experience</a>
+  <a href="#skills"     onclick="go('skills')">Skills</a>
+  <a href="#education"  onclick="go('education')">Education</a>
+  <a href="#contact"    onclick="go('contact')">Contact</a>
+  <a href="https://github.com/ashlesh45" target="_blank">GitHub ↗</a>
+</div>
+
+<!-- ══ HOME ══ -->
+<div class="page on" id="page-home">
+  <div class="hero">
+    <div class="hl">
+      <div class="eyebrow">Available for Opportunities</div>
+      <div class="hname">M ASHLESH<br/><em>MALLYA</em></div>
+      <div class="hrole"><b>DATA_ANALYST</b> · ML_ENTHUSIAST · BI_DEVELOPER</div>
+      <p class="hdesc">Final-year Computer &amp; Communication Engineering student at MIT Manipal. I transform raw data into decisions — ML pipelines, interactive dashboards, and enterprise databases.</p>
+      <div class="brow">
+        <a class="bp" href="#projects" onclick="go('projects')">View Projects →</a>
+        <a class="bo" href="#contact"  onclick="go('contact')">Contact Me</a>
+      </div>
+    </div>
+    <div class="hr">
+      <div class="term">
+        <div class="tbar">
+          <div class="tdots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+          <div class="ttitle">ashlesh@portfolio:~</div>
+          <div style="width:56px"></div>
+        </div>
+        <div class="tbody" id="tb"></div>
+        <div class="tinrow">
+          <span class="tps">ashlesh@portfolio:~$&nbsp;</span>
+          <input class="tinput" id="ti" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="type a command… (try 'help')"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA // ALL SYSTEMS OPERATIONAL</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+      <a href="mailto:ashleshmallya45@gmail.com">Email</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ PROJECTS ══ -->
+<div class="page" id="page-projects">
+  <div class="wrap sw">
+    <div class="tag">Technical Work</div>
+    <div class="stitle">Projects</div>
+    <div id="pc"><div class="loading"><span class="spin">⟳</span> Fetching repositories from GitHub…</div></div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ EXPERIENCE ══ -->
+<div class="page" id="page-experience">
+  <div class="wrap sw">
+    <div class="tag">Work History</div>
+    <div class="stitle">Experience</div>
+    <div class="ecard rv">
+      <div>
+        <span class="eperiod">NOV 2025 — DEC 2025</span>
+        <div class="eco">Arham Group</div>
+        <div class="erole">Data Analyst Intern</div>
+      </div>
+      <ul class="elist">
+        <li>Collected, validated, and cleaned large datasets to ensure high data accuracy and consistency across the sales pipeline.</li>
+        <li>Performed data preprocessing and quality checks to support reliable, actionable insights for the sales team.</li>
+        <li>Collaborated with cross-functional teams to enable data-driven decision-making across departments.</li>
+        <li>Gained practical exposure to corporate workflows and real-world enterprise data handling processes.</li>
+      </ul>
+    </div>
+    <div style="margin-top:64px">
+      <div class="tag">What I bring</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;background:var(--border2)">
+        <div style="background:var(--bg);padding:28px" class="rv">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);margin-bottom:10px;letter-spacing:.1em">STRENGTH_01</div>
+          <div style="font-family:var(--head);font-size:18px;font-weight:700;margin-bottom:8px">Data Accuracy</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Meticulous validation and cleaning workflows that eliminate noise before analysis begins.</div>
+        </div>
+        <div style="background:var(--bg);padding:28px" class="rv">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);margin-bottom:10px;letter-spacing:.1em">STRENGTH_02</div>
+          <div style="font-family:var(--head);font-size:18px;font-weight:700;margin-bottom:8px">Visual Insight</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Translating complex datasets into clear, compelling dashboards that drive decisions.</div>
+        </div>
+        <div style="background:var(--bg);padding:28px" class="rv">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);margin-bottom:10px;letter-spacing:.1em">STRENGTH_03</div>
+          <div style="font-family:var(--head);font-size:18px;font-weight:700;margin-bottom:8px">ML Modelling</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Feature engineering and predictive modelling that turn historical data into forward-looking intelligence.</div>
+        </div>
+        <div style="background:var(--bg);padding:28px" class="rv">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);margin-bottom:10px;letter-spacing:.1em">STRENGTH_04</div>
+          <div style="font-family:var(--head);font-size:18px;font-weight:700;margin-bottom:8px">Cross-functional</div>
+          <div style="font-size:13px;color:var(--muted);line-height:1.6">Comfortable bridging technical data work with business stakeholders across teams.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ SKILLS ══ -->
+<div class="page" id="page-skills">
+  <div class="wrap sw">
+    <div class="tag">Technical Arsenal</div>
+    <div class="stitle">Skills</div>
+    <div class="skgrid">
+      <div class="skg rv"><div class="sgt">Programming Languages</div><div class="pills"><span class="pill">Python</span><span class="pill">C</span><span class="pill">C++</span><span class="pill">Java</span><span class="pill">C# (.NET)</span><span class="pill">SQL</span></div></div>
+      <div class="skg rv"><div class="sgt">Data Analysis</div><div class="pills"><span class="pill">Data Cleaning</span><span class="pill">Data Validation</span><span class="pill">Data Preprocessing</span><span class="pill">EDA</span><span class="pill">Feature Engineering</span><span class="pill">Correlation Analysis</span></div></div>
+      <div class="skg rv"><div class="sgt">Tools &amp; Platforms</div><div class="pills"><span class="pill">Power BI</span><span class="pill">Tableau</span><span class="pill">Excel</span><span class="pill">Oracle DB</span><span class="pill">Git</span><span class="pill">GitHub</span></div></div>
+      <div class="skg rv"><div class="sgt">Machine Learning</div><div class="pills"><span class="pill">Logistic Regression</span><span class="pill">Scikit-learn</span><span class="pill">Pandas</span><span class="pill">NumPy</span><span class="pill">Matplotlib</span><span class="pill">Classification</span></div></div>
+      <div class="skg rv"><div class="sgt">Database</div><div class="pills"><span class="pill">Oracle DB</span><span class="pill">SQL Queries</span><span class="pill">Transaction Handling</span><span class="pill">Data Modelling</span><span class="pill">Oracle Data Access</span></div></div>
+      <div class="skg rv"><div class="sgt">Soft Skills</div><div class="pills"><span class="pill">Leadership</span><span class="pill">Discipline</span><span class="pill">Problem Solving</span><span class="pill">Teamwork</span><span class="pill">Data Storytelling</span><span class="pill">Cross-functional Collab</span></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ EDUCATION ══ -->
+<div class="page" id="page-education">
+  <div class="wrap sw">
+    <div class="tag">Academic Background</div>
+    <div class="stitle">Education</div>
+    <div class="edugrid">
+      <div class="educard rv">
+        <span class="edubadge">B.TECH · CURRENT</span>
+        <div class="eduinst">Manipal Institute of Technology</div>
+        <div class="edudeg">B.Tech in Computer and Communication Engineering</div>
+        <div class="eduhl">CGPA: 7.8</div>
+        <div class="edunote">Studying at one of India's premier engineering institutions, building strong foundations in computing, networking and systems engineering.</div>
+      </div>
+      <div class="educard rv">
+        <span class="edubadge">NATIONAL DEFENCE ACADEMY</span>
+        <div class="eduinst">National Defence Academy</div>
+        <div class="edudeg">Army Wing — All India Rank 61</div>
+        <div class="eduhl">AIR: 61</div>
+        <div class="edunote">Top-61 rank nationally. Developed exceptional leadership, discipline, high-pressure teamwork and structured problem-solving skills.</div>
+      </div>
+    </div>
+    <div class="tag" style="margin-top:64px">Credentials</div>
+    <div style="font-family:var(--head);font-size:clamp(26px,4vw,42px);font-weight:800;letter-spacing:-.02em;margin-bottom:32px">Certifications</div>
+    <div class="certgrid">
+      <div class="certcard rv"><div class="certicon">🎓</div><div><div class="cname">Google Data Analytics Professional Certificate</div><div class="ciss">Google</div></div></div>
+      <div class="certcard rv"><div class="certicon">📊</div><div><div class="cname">Tableau Desktop Specialist</div><div class="ciss">Tableau / Salesforce</div></div></div>
+      <div class="certcard rv"><div class="certicon">📈</div><div><div class="cname">Data Visualization — CAP Certification</div><div class="ciss">CAP Program</div></div></div>
+      <div class="certcard rv"><div class="certicon">🤖</div><div><div class="cname">Machine Learning and Data Analytics</div><div class="ciss">Professional Certification</div></div></div>
+      <div class="certcard rv"><div class="certicon">⚡</div><div><div class="cname">Tableau Desktop — Real Time Dashboard</div><div class="ciss">Tableau</div></div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ CONTACT ══ -->
+<div class="page" id="page-contact">
+  <div class="wrap sw">
+    <div class="tag">Get in Touch</div>
+    <div class="stitle">Contact</div>
+    <div class="cgrid">
+      <div>
+        <a href="mailto:ashleshmallya45@gmail.com" class="citem rv"><div class="cico">✉️</div><div><div class="clbl">Email</div><div class="cval">ashleshmallya45@gmail.com</div></div></a>
+        <a href="tel:+919945381136" class="citem rv"><div class="cico">📱</div><div><div class="clbl">Phone</div><div class="cval">+91 9945381136</div></div></a>
+        <a href="https://github.com/ashlesh45" target="_blank" class="citem rv"><div class="cico">🐙</div><div><div class="clbl">GitHub</div><div class="cval">github.com/ashlesh45</div></div></a>
+        <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank" class="citem rv"><div class="cico">💼</div><div><div class="clbl">LinkedIn</div><div class="cval">m-ashlesh-mallya</div></div></a>
+      </div>
+      <div class="ccta rv">
+        <div class="ctatitle">Let's build something with data.</div>
+        <div class="ctadesc">I'm actively seeking data analyst, BI, or ML roles. Whether it's full-time, an internship, or a freelance project — I'd love to connect and explore how I can add value to your team.</div>
+        <a href="mailto:ashleshmallya45@gmail.com" class="bp" style="width:fit-content">Send a Message →</a>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <footer>
+    <div class="flogo">ASHLESH_MALLYA.DEV</div>
+    <div class="fcopy">© 2025 M ASHLESH MALLYA</div>
+    <div class="flinks">
+      <a href="https://github.com/ashlesh45" target="_blank">GitHub</a>
+      <a href="https://www.linkedin.com/in/m-ashlesh-mallya-9a118836a" target="_blank">LinkedIn</a>
+      <a href="mailto:ashleshmallya45@gmail.com">Email</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+/* ════════════════════════════
+   CURSOR
+════════════════════════════ */
+const C=document.getElementById('cur'),R=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+(function ac(){
+  if(C){C.style.left=mx+'px';C.style.top=my+'px'}
+  rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+  if(R){R.style.left=rx+'px';R.style.top=ry+'px'}
+  requestAnimationFrame(ac);
+})();
+document.querySelectorAll('a,button,.pill,.certcard,.pcard').forEach(el=>{
+  el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));
+  el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'));
+});
+
+/* ════════════════════════════
+   DATA-STREAM CANVAS BACKGROUND
+   — Floating data tokens + network nodes + binary rain streams
+════════════════════════════ */
+(function(){
+  const cv=document.getElementById('cv');
+  const ctx=cv.getContext('2d');
+  let W,H;
+
+  const TOKENS=[
+    'SELECT *','FROM df','WHERE churn=1','GROUP BY','ORDER BY',
+    'JOIN ON','df.head()','df.info()','pd.read_csv()','model.fit()',
+    'import pandas as pd','import numpy as np','from sklearn',
+    'accuracy_score','confusion_matrix','f1_score','precision',
+    'NULL','INT','FLOAT','BOOLEAN','VARCHAR','ARRAY',
+    '01101010','11001100','0b10110','0xFF3A',
+    'μ=0.0','σ²=1.0','∑xᵢ','∇loss','R²=0.94','p<0.05',
+    'COMMIT','INDEX','FOREIGN KEY','PRIMARY KEY','ROLLBACK',
+    'x_train','y_pred','fit()','predict()','transform()',
+    'PowerBI','Tableau','Excel','Oracle','Logistic Reg',
+    '{"id":1}','[1,2,3]','True','False','NaN','Inf',
+    'churn=0','tenure=24','charges=79.5',
+    'git push','pip install','conda activate',
+    'KPI','DAX','ETL','EDA','API','JSON','CSV',
+    'df.dropna()','df.fillna(0)','df.merge()','df.groupby()',
+  ];
+
+  // Floating token particles
+  let particles=[];
+  // Network nodes
+  let nodes=[];
+  // Binary rain columns
+  let rain=[];
+
+  function rand(a,b){return a+Math.random()*(b-a)}
+  function randInt(a,b){return Math.floor(rand(a,b))}
+
+  function resize(){
+    W=cv.width=window.innerWidth;
+    H=cv.height=window.innerHeight;
+    particles=Array.from({length:60},()=>mkParticle());
+    nodes=Array.from({length:28},()=>mkNode());
+    rain=Array.from({length:Math.floor(W/22)},(_,i)=>mkRain(i));
+  }
+
+  function mkParticle(){
+    return{
+      t:TOKENS[randInt(0,TOKENS.length)],
+      x:rand(0,W),y:rand(0,H),
+      vx:rand(-.15,.15),vy:rand(-.1,.1),
+      a:rand(.04,.11),sz:rand(9,13),
+      ph:rand(0,Math.PI*2),
+    }
+  }
+  function mkNode(){
+    return{x:rand(0,W),y:rand(0,H),vx:rand(-.25,.25),vy:rand(-.25,.25),r:rand(1.5,3)}
+  }
+  function mkRain(col){
+    return{x:col*22+11,y:rand(-H,0),speed:rand(.6,1.8),chars:[],len:randInt(6,18),alpha:rand(.03,.07)}
+  }
+
+  function drawFrame(){
+    ctx.clearRect(0,0,W,H);
+
+    // Vignette
+    const vg=ctx.createRadialGradient(W/2,H/2,H*.05,W/2,H/2,H*.85);
+    vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,.6)');
+    ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+
+    const t=performance.now()/1000;
+
+    // ── Binary rain ──
+    rain.forEach(col=>{
+      col.y+=col.speed;
+      if(col.y>H+col.len*16){col.y=rand(-200,-50);col.speed=rand(.6,1.8);col.len=randInt(6,18);col.chars=[]}
+      for(let i=0;i<col.len;i++){
+        const cy=col.y-i*16;
+        if(cy<0||cy>H) continue;
+        const fade=1-i/col.len;
+        const a=col.alpha*fade*(i===0?2:1);
+        const ch=Math.random()<.05?(Math.round(Math.random())+''):((col.chars[i]||'01')[0]);
+        col.chars[i]=ch;
+        ctx.font=`${i===0?13:11}px 'JetBrains Mono',monospace`;
+        ctx.fillStyle=i===0?`rgba(0,255,170,${a*3})`:`rgba(0,255,170,${a})`;
+        ctx.fillText(ch,col.x,cy);
+      }
+    });
+
+    // ── Node connections ──
+    for(let i=0;i<nodes.length;i++){
+      for(let j=i+1;j<nodes.length;j++){
+        const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<170){
+          ctx.strokeStyle=`rgba(0,255,170,${(1-d/170)*.10})`;
+          ctx.lineWidth=.7;ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        }
+      }
+    }
+    // ── Nodes ──
+    nodes.forEach(n=>{
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,255,170,.15)';ctx.fill();
+      n.x+=n.vx;n.y+=n.vy;
+      if(n.x<-10)n.x=W+10;if(n.x>W+10)n.x=-10;
+      if(n.y<-10)n.y=H+10;if(n.y>H+10)n.y=-10;
+    });
+
+    // ── Floating data tokens ──
+    particles.forEach(p=>{
+      p.ph+=.007;
+      const a=p.a*(.7+.3*Math.sin(p.ph));
+      ctx.font=`${p.sz}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle=`rgba(0,255,170,${a})`;
+      ctx.fillText(p.t,p.x,p.y);
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x>W+100)p.x=-100;if(p.x<-100)p.x=W+100;
+      if(p.y>H+20)p.y=-20;if(p.y<-20)p.y=H+20;
+    });
+
+    // ── Subtle scan line ──
+    const sy=(t*50)%H;
+    const sg=ctx.createLinearGradient(0,sy-30,0,sy+30);
+    sg.addColorStop(0,'rgba(0,255,170,0)');sg.addColorStop(.5,'rgba(0,255,170,.018)');sg.addColorStop(1,'rgba(0,255,170,0)');
+    ctx.fillStyle=sg;ctx.fillRect(0,sy-30,W,60);
+
+    requestAnimationFrame(drawFrame);
+  }
+
+  window.addEventListener('resize',resize);
+  resize();drawFrame();
+})();
+
+/* ════════════════════════════
+   ROUTER
+════════════════════════════ */
+const PAGES=['home','projects','experience','skills','education','contact'];
+let loaded=false;
+
+function go(page){
+  if(!PAGES.includes(page))page='home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  const target=document.getElementById('page-'+page);
+  if(target)target.classList.add('on');
+  document.querySelectorAll('.na').forEach(a=>a.classList.toggle('on',a.dataset.p===page));
+  history.pushState(null,'','#'+page);
+  document.getElementById('drawer').classList.remove('open');
+  window.scrollTo(0,0);
+  setTimeout(doReveal,80);
+  if(page==='projects'&&!loaded)fetchRepos();
+}
+
+document.querySelectorAll('.na').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();go(a.dataset.p)});
+});
+window.addEventListener('popstate',()=>go((location.hash||'#home').slice(1)));
+go((location.hash||'#home').slice(1));
+
+/* ════════════════════════════
+   SCROLL REVEAL
+════════════════════════════ */
+const obs=new IntersectionObserver(es=>{
+  es.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('vis'),i*65)});
+},{threshold:.1});
+function doReveal(){
+  document.querySelectorAll('.page.on .rv').forEach(el=>obs.observe(el));
+}
+
+/* ════════════════════════════
+   GITHUB API
+════════════════════════════ */
+const OVERRIDES={
+  'churn':'ML model using Logistic Regression to predict customer churn. EDA, feature engineering, and correlation analysis on contract type, tenure, and monthly charges.',
+  'grocery':'Database-driven app in C# (.NET) + Oracle DB — product management, stock tracking, supplier linkage, and transaction handling.',
+  'power':'Interactive Power BI dashboards with KPIs, filters, and drill-through for business decision-making.',
+  'analysis':'Data analysis project involving cleaning, preprocessing, and generating actionable insights from raw datasets.',
+  'ml':'Machine learning project with model training, evaluation, and feature engineering.',
+};
+function getDesc(r){
+  if(r.description&&r.description.trim())return r.description;
+  const n=r.name.toLowerCase();
+  for(const k in OVERRIDES)if(n.includes(k))return OVERRIDES[k];
+  return 'Technical project — see repository for full details and source code.';
+}
+function langClass(l){
+  if(!l)return'';const v=l.toLowerCase();
+  if(v==='python')return'lpy';if(v==='javascript'||v==='typescript')return'ljs';
+  if(v==='c#')return'lcs';if(v==='java')return'ljv';if(v==='html')return'lht';
+  if(v==='c'||v==='c++')return'lcc';if(v==='jupyter notebook')return'lnb';
+  return'';
+}
+
+const CURATED=[
+  {name:'Customer Churn Analysis',desc:'ML model using Logistic Regression to predict customer churn. Performed EDA, feature engineering, and correlation analysis — uncovering key drivers like contract type, tenure, and monthly charges.',lang:'Python',tag:'FEATURED_01',url:'https://github.com/ashlesh45'},
+  {name:'Online Grocery Store Database',desc:'Full-featured database-driven app in C# (.NET) backed by Oracle DB. Product management, stock tracking, supplier linkage, input validation, and transaction handling.',lang:'C#',tag:'FEATURED_02',url:'https://github.com/ashlesh45'},
+  {name:'Business Data Analysis — Power BI',desc:'Designed interactive Power BI dashboards with KPI cards, drill-through filters, and dynamic visualizations supporting executive decision-making.',lang:'Power BI',tag:'FEATURED_03',url:'https://github.com/ashlesh45'},
+];
+
+async function fetchRepos(){
+  const pc=document.getElementById('pc');
+  try{
+    const res=await fetch('https://api.github.com/users/ashlesh45/repos?per_page=30&sort=updated',{headers:{'Accept':'application/vnd.github.v3+json'}});
+    if(!res.ok)throw new Error(res.status);
+    const repos=await res.json();
+    const filtered=repos.filter(r=>!r.fork).sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at));
+    let h='<div class="pgrid">';
+    CURATED.forEach(p=>{
+      h+=`<div class="pcard rv"><div class="pnum">${p.tag}</div><span class="plang ${langClass(p.lang)}">${p.lang}</span><div class="ptitle">${p.name}</div><div class="pdesc">${p.desc}</div><div class="pmeta"><span class="pstar">Featured</span><a href="${p.url}" target="_blank" class="plink">View ↗</a></div></div>`;
+    });
+    filtered.forEach((r,i)=>{
+      const upd=new Date(r.updated_at).toLocaleDateString('en-IN',{month:'short',year:'numeric'});
+      const stars=r.stargazers_count>0?`★ ${r.stargazers_count} · `:'';
+      h+=`<div class="pcard rv"><div class="pnum">REPO_${String(i+1).padStart(2,'0')}</div>${r.language?`<span class="plang ${langClass(r.language)}">${r.language}</span>`:''}<div class="ptitle">${r.name.replace(/[-_]/g,' ')}</div><div class="pdesc">${getDesc(r)}</div><div class="pmeta"><span class="pstar">${stars}Updated ${upd}</span><a href="${r.html_url}" target="_blank" class="plink">View Repo ↗</a></div></div>`;
+    });
+    h+='</div>';
+    pc.innerHTML=h;loaded=true;setTimeout(doReveal,100);
+  }catch(e){
+    pc.innerHTML=`<div style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:24px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2)">⚠ GitHub API unavailable — showing featured projects. <a href="https://github.com/ashlesh45" target="_blank" style="color:var(--green)">View all on GitHub ↗</a></div><div class="pgrid">${CURATED.map((p,i)=>`<div class="pcard rv"><div class="pnum">PROJECT_0${i+1}</div><span class="plang ${langClass(p.lang)}">${p.lang}</span><div class="ptitle">${p.name}</div><div class="pdesc">${p.desc}</div><div class="pmeta"><span class="pstar">Featured</span><a href="${p.url}" target="_blank" class="plink">GitHub ↗</a></div></div>`).join('')}</div>`;
+    setTimeout(doReveal,100);
+  }
+}
+
+/* ════════════════════════════
+   INTERACTIVE TERMINAL
+════════════════════════════ */
+(function(){
+  const tb=document.getElementById('tb');
+  const ti=document.getElementById('ti');
+  let hist=[],hi=-1;
+
+  function el(tag,cls,html){const d=document.createElement(tag);if(cls)d.className=cls;if(html)d.innerHTML=html;return d}
+  function app(node){tb.appendChild(node);tb.scrollTop=tb.scrollHeight}
+
+  function echo(cmd){
+    const row=el('div','tl');
+    row.innerHTML=`<span class="tp2">ashlesh@portfolio:~$&nbsp;</span><span class="tc">${cmd.replace(/</g,'&lt;')}</span>`;
+    app(row);
+  }
+  function out(html){const d=el('div','to');d.innerHTML=html;app(d)}
+  function err(msg){const d=el('div','te');d.textContent=msg;app(d)}
+
+  const CMD={
+    help(){out(`<span class="g">Available commands:</span><br/><br/><span class="k">whoami</span>     — profile info<br/><span class="k">skills</span>     — list skills<br/><span class="k">projects</span>   — go to projects page<br/><span class="k">experience</span> — go to experience page<br/><span class="k">education</span>  — go to education page<br/><span class="k">contact</span>    — show contact info<br/><span class="k">github</span>     — open GitHub profile<br/><span class="k">ls</span>         — list pages<br/><span class="k">pwd</span>        — print working directory<br/><span class="k">date</span>       — show current date<br/><span class="k">uname</span>      — system info<br/><span class="k">history</span>    — command history<br/><span class="k">ping</span>       — test connection<br/><span class="k">cd &lt;page&gt;</span>  — navigate to page<br/><span class="k">echo &lt;txt&gt;</span> — print text<br/><span class="k">clear</span>      — clear terminal`)},
+    whoami(){out(`<span class="k">name       </span> <span class="v">M Ashlesh Mallya</span><br/><span class="k">title      </span> <span class="v">Data Analyst · ML Enthusiast</span><br/><span class="k">institute  </span> <span class="v">Manipal Institute of Technology</span><br/><span class="k">degree     </span> <span class="v">B.Tech — Computer &amp; Communication Engg</span><br/><span class="k">cgpa       </span> <span class="v">7.8 / 10.0</span><br/><span class="k">nda_rank   </span> <span class="v">AIR 61 (Army Wing)</span><br/><span class="k">status     </span> <span class="g">OPEN TO WORK ✓</span><br/><span class="k">location   </span> <span class="v">India 🇮🇳</span>`)},
+    skills(){out(`<span class="g">── Languages ──</span>  Python · C · C++ · Java · C# · SQL<br/><span class="g">── Analysis  ──</span>  Pandas · NumPy · EDA · Feature Engineering<br/><span class="g">── ML        ──</span>  Scikit-learn · Logistic Regression<br/><span class="g">── BI Tools  ──</span>  Power BI · Tableau · Excel<br/><span class="g">── Database  ──</span>  Oracle DB · SQL · Transaction Handling<br/><span class="g">── Dev       ──</span>  Git · GitHub`)},
+    projects(){out(`Navigating to <span class="g">projects</span>…`);setTimeout(()=>go('projects'),600)},
+    experience(){out(`Navigating to <span class="g">experience</span>…`);setTimeout(()=>go('experience'),600)},
+    education(){out(`Navigating to <span class="g">education</span>…`);setTimeout(()=>go('education'),600)},
+    contact(){out(`<span class="k">email   </span> <span class="v">ashleshmallya45@gmail.com</span><br/><span class="k">phone   </span> <span class="v">+91 9945381136</span><br/><span class="k">github  </span> <span class="g">github.com/ashlesh45</span><br/><span class="k">linkedin</span> <span class="v">linkedin.com/in/m-ashlesh-mallya-9a118836a</span>`)},
+    github(){out(`Opening <span class="g">github.com/ashlesh45</span>…`);setTimeout(()=>window.open('https://github.com/ashlesh45','_blank'),400)},
+    ls(){out(`<span class="v">home/</span>  <span class="v">projects/</span>  <span class="v">experience/</span>  <span class="v">skills/</span>  <span class="v">education/</span>  <span class="v">contact/</span>`)},
+    pwd(){out(`<span class="g">/home/ashlesh/portfolio</span>`)},
+    date(){out(`<span class="v">${new Date().toLocaleString('en-IN',{weekday:'short',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}</span>`)},
+    uname(){out(`<span class="v">PortfolioOS 1.0.0 — Data Analyst Edition · Ashlesh Mallya · ashlesh45</span>`)},
+    ping(){out(`PING ashlesh.dev: 56 bytes<br/><span class="v">64 bytes icmp_seq=0 ttl=64 time=0.38ms</span><br/><span class="v">64 bytes icmp_seq=1 ttl=64 time=0.41ms</span><br/><span class="g">Connection successful. Always online ✓</span>`)},
+    history(){if(!hist.length){out('<span class="d">No history yet.</span>');return}out(hist.map((c,i)=>`<span class="d">${String(i+1).padStart(4)}</span>  <span class="v">${c}</span>`).join('<br/>'))},
+    clear(){tb.innerHTML=''},
+  };
+
+  function run(raw){
+    const cmd=raw.trim();
+    if(!cmd)return;
+    hist.push(cmd);hi=hist.length;
+    echo(cmd);
+    const parts=cmd.split(/\s+/);
+    const base=parts[0].toLowerCase();
+    if(base==='echo'){out(`<span class="v">${parts.slice(1).join(' ')}</span>`)}
+    else if(base==='cd'){
+      const dest=parts[1]||'home';
+      if(PAGES.includes(dest)){out(`Navigating to <span class="g">${dest}</span>…`);setTimeout(()=>go(dest),600)}
+      else err(`bash: cd: ${dest}: No such page`)
+    }
+    else if(CMD[base])CMD[base]();
+    else err(`bash: ${base}: command not found  (type 'help' for available commands)`);
+  }
+
+  ti.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){run(ti.value);ti.value='';hi=hist.length}
+    else if(e.key==='ArrowUp'){e.preventDefault();if(hi>0){hi--;ti.value=hist[hi]||''}}
+    else if(e.key==='ArrowDown'){e.preventDefault();if(hi<hist.length-1){hi++;ti.value=hist[hi]}else{hi=hist.length;ti.value=''}}
+    else if(e.key==='Tab'){e.preventDefault();const v=ti.value.toLowerCase().trim();const m=Object.keys(CMD).find(k=>k.startsWith(v));if(m)ti.value=m}
+  });
+  tb.addEventListener('click',()=>ti.focus());
+
+  // Boot sequence
+  const seq=[
+    ()=>{const r=el('div','tl');r.innerHTML=`<span class="tp">ashlesh@portfolio:~$</span>&nbsp;<span class="tc">./boot.sh</span>`;app(r)},
+    ()=>out(`<span class="g">Portfolio OS v1.0 — all systems online ✓</span>`),
+    ()=>{const r=el('div','tl');r.innerHTML=`<span class="tp">ashlesh@portfolio:~$</span>&nbsp;<span class="tc">cat welcome.txt</span>`;app(r)},
+    ()=>out(`<span class="v">Hey! I'm Ashlesh — Data Analyst &amp; ML Enthusiast.</span><br/><span class="d">Type</span> <span class="g">help</span> <span class="d">to explore. Try:</span> <span class="k">whoami</span> · <span class="k">skills</span> · <span class="k">projects</span> · <span class="k">contact</span>`),
+    ()=>{const r=el('div','tl');r.innerHTML=`<span class="tp">ashlesh@portfolio:~$</span>&nbsp;<span class="tc" style="opacity:.4">█</span>`;app(r)},
+  ];
+  let d=0;seq.forEach(fn=>{setTimeout(fn,d);d+=340});
+  setTimeout(()=>ti.focus(),d+200);
+})();
+
+/* ════════════════════════════
+   HAMBURGER
+════════════════════════════ */
+document.getElementById('ham').addEventListener('click',()=>{
+  document.getElementById('drawer').classList.toggle('open');
+});
+</script>
+</body>
+</html>
